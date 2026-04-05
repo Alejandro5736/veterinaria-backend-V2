@@ -1,0 +1,32 @@
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins_vete
+    ports:
+      - "8080:8080"
+    networks:
+      - vete-net
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube_vete
+    ports:
+      - "9000:9000"
+    networks:
+      - vete-net
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_vete
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: veterinaria
+    ports:
+      - "3306:3306"
+    networks:
+      - vete-net
+
+networks:
+  vete-net:
