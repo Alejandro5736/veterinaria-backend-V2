@@ -1,4 +1,5 @@
 services:
+  # Jenkins
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins_vete
@@ -9,6 +10,7 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home
 
+  # SonarQube
   sonarqube:
     image: sonarqube:community
     container_name: sonarqube_vete
@@ -17,16 +19,21 @@ services:
     networks:
       - vete-net
 
+  # Base de Datos (usando tu Dockerfile)
   db:
-    image: mysql:8.0
+    build: .
     container_name: mysql_vete
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: veterinaria
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
       - vete-net
 
+# --- ESTA ES LA PARTE QUE TE FALTA ---
 networks:
   vete-net:
+
+volumes:
+  jenkins_home:
