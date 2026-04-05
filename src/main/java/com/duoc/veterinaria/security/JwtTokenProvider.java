@@ -1,12 +1,18 @@
 package com.duoc.veterinaria.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-    private final String JWT_SECRET = "926eb5ee9111c191a329583110292728"; // Usa una clave segura
+
+    // Borra la línea que tenía el código secreto escrito
+    @Value("${app.jwt.secret}") 
+    private String jwtSecret;
+
     private final long JWT_EXPIRATION = 604800000L;
 
     public String generarToken(String username) {
@@ -14,14 +20,7 @@ public class JwtTokenProvider {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
-                .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret) // Usa la variable inyectada
                 .compact();
-    }
-
-    public boolean validarToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
-            return true;
-        } catch (Exception ex) { return false; }
     }
 }
